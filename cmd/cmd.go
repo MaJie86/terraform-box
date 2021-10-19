@@ -11,11 +11,10 @@ import (
 func Exec(fileName, dir, commandName string, params []string) error {
 	Path := "d://logs/cmd/"
 	os.MkdirAll(Path, 755)
-	f, err := os.Create(Path + fileName) //创建文件
+	f, err := os.Create(Path + fileName)
 	defer f.Close()
 	cmd := exec.Command(commandName, params...)
 	fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
-	//StdoutPipe方法返回一个在命令Start后与命令标准输出关联的管道。Wait方法获知命令结束后会关闭这个管道，一般不需要显式的关闭该管道。
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println("cmd.StdoutPipe: ", err)
