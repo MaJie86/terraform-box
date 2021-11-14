@@ -1,4 +1,4 @@
-module github.com/MaJie86/terraform-box/cmd
+module github.com/majie86/terraform-box/cmd
 
 go 1.16
 

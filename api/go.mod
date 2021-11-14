@@ -1,8 +1,9 @@
-module github.com/MaJie86/terraform-box/api
+module github.com/majie86/terraform-box/api
 
 go 1.16
 
 require (
+	github.com/majie86/terraform-box/cmd v0.0.0-00010101000000-000000000000
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
@@ -18,4 +19,4 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 )
 
-replace github.com/MaJie86/terraform-box/cmd => ./cmd
+replace github.com/majie86/terraform-box/cmd => ../cmd
