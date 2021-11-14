@@ -17,3 +17,5 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 )
+
+replace github.com/MaJie86/terraform-box/cmd => ./cmd

@@ -9,8 +9,12 @@ import (
 func main() {
 	fmt.Println("abc")
 
-	var params = []string{}
-	_ = cmd.Exec("test.log", "d://", "ipconfig", params)
-
+	//var params = []string{}
+	//_ = cmd.Exec("test.log", "d://", "ipconfig", params)
+	lines, total := cmd.ReadLog(6)
+	for i := lines.Front(); i != nil; i = i.Next() {
+		fmt.Println(i.Value)
+	}
+	fmt.Println(total)
 	api.Create()
 }
