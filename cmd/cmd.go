@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"container/list"
 	"fmt"
 	"io"
 	"os"
@@ -42,14 +41,14 @@ func Exec(fileName, dir, commandName string, params []string) error {
 	return err
 }
 
-func ReadLog(lineNumber int) (*list.List, int) {
+func ReadLog(lineNumber int) ([]string, int) {
 	file, _ := os.Open("d://logs/cmd/test.log")
 	fileScanner := bufio.NewScanner(file)
 	lineCount := 1
-	lines := list.New()
+	var lines []string
 	for fileScanner.Scan() {
 		if lineCount >= lineNumber {
-			lines.PushBack(fileScanner.Text())
+			lines = append(lines, fileScanner.Text())
 		}
 		lineCount++
 	}

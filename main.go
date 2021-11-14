@@ -13,8 +13,8 @@ func main() {
 	_ = cmd.Exec("test.log", "d://", "ipconfig", params)
 
 	lines, total := cmd.ReadLog(6)
-	for i := lines.Front(); i != nil; i = i.Next() {
-		fmt.Println(i.Value)
+	for line := range lines {
+		fmt.Println(line)
 	}
 	fmt.Println(total)
 
