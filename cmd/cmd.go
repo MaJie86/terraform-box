@@ -41,8 +41,8 @@ func Exec(fileName, dir, commandName string, params []string) error {
 	return err
 }
 
-func ReadLog(lineNumber int) ([]string, int) {
-	file, _ := os.Open("d://logs/cmd/test.log")
+func ReadLog(filePath string, lineNumber int) ([]string, int) {
+	file, _ := os.Open(filePath)
 	fileScanner := bufio.NewScanner(file)
 	lineCount := 1
 	var lines []string
