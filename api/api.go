@@ -2,35 +2,49 @@ package api
 
 import (
 	"fmt"
-	"github.com/kataras/iris/v12"
 	"github.com/majie86/terraform-box/cmd"
-	"github.com/majie86/terraform-box/pool"
+	"github.com/majie86/terraform-box/taskpool"
+	"log"
 )
 
 var app *iris.Application
 
-type TfWorker struct {
-	do func()
-}
-
-func (worker *TfWorker) DoWork(workRoutine int) {
-	worker.do()
-}
-
-func Init() {
+func Init(port string) {
 	app = iris.New()
 	apply()
-	app.Run(iris.Addr(":8888"))
+	cancel()
+	app.Run(iris.Addr(port))
 }
 
 func apply() {
 	app.Handle("GET", "/apply", func(ctx iris.Context) {
-		work := TfWorker{
-			func() {
-				fmt.Println("aaaa")
-			},
+		task := taskpool.Task{}
+		task.Do = func() {
+			fmt.Println("aaaa")
+			var params = []string{}
+			params = append(params, "baidu.com")
+			params = append(params, "-t")
+			command,err:=cmd.Exec("test.log", "d://logs/cmd/", "ping", params)
+			println("1111111111")
+			if err==nil {
+				task.Command =command
+			}
 		}
-		pool.Run("aa", &work)
+		task.Stop= func() {
+			// Kill it:
+			if err := task.Command.Process.Kill(); err != nil {
+				log.Fatal("failed to kill process: ", err)
+			}
+		}
+		taskpool.Run("aaa",task)
+		ctx.JSON("apply finish")
+	})
+}
+
+func cancel() {
+	app.Handle("GET", "/cancel", func(ctx iris.Context) {
+		taskpool.Cancel("aa")
+		ctx.JSON("cancel finish")
 	})
 }
 

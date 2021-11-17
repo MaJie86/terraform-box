@@ -8,23 +8,21 @@ import (
 	"os/exec"
 )
 
-func Exec(fileName, dir, commandName string, params []string) error {
-	Path := "d://logs/cmd/"
-	os.MkdirAll(Path, 755)
-	f, err := os.Create(Path + fileName)
+func Exec(fileName, dir, commandName string, params []string) (*exec.Cmd, error) {
+	os.MkdirAll(dir, 755)
+	f, err := os.Create(dir + fileName)
 	defer f.Close()
 	cmd := exec.Command(commandName, params...)
-	fmt.Println("CmdAndChangeDirToFile", dir, cmd.Args)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println("cmd.StdoutPipe: ", err)
-		return err
+		return cmd, err
 	}
 	cmd.Stderr = os.Stderr
 	cmd.Dir = dir
 	err = cmd.Start()
 	if err != nil {
-		return err
+		return cmd, err
 	}
 	reader := bufio.NewReader(stdout)
 	for {
@@ -32,13 +30,12 @@ func Exec(fileName, dir, commandName string, params []string) error {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
+		print(line)
 		_, err = f.WriteString(line)
 		f.Sync()
 	}
-	_, err = f.WriteString("=================end========================")
-	f.Sync()
 	err = cmd.Wait()
-	return err
+	return cmd, err
 }
 
 func ReadLog(filePath string, lineNumber int) ([]string, int) {

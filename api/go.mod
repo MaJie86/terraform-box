@@ -21,4 +21,4 @@ require (
 
 replace github.com/majie86/terraform-box/cmd => ../cmd
 
-replace github.com/majie86/terraform-box/pool => ../pool
+replace github.com/majie86/terraform-box/taskpool => ../taskpool
