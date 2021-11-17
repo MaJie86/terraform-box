@@ -3,12 +3,13 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"github.com/majie86/terraform-box/taskpool"
 	"io"
 	"os"
 	"os/exec"
 )
 
-func Exec(fileName, dir, commandName string, params []string) (*exec.Cmd, error) {
+func Exec(fileName, dir, commandName string, params []string, task *taskpool.Task) error {
 	os.MkdirAll(dir, 755)
 	f, err := os.Create(dir + fileName)
 	defer f.Close()
@@ -16,13 +17,14 @@ func Exec(fileName, dir, commandName string, params []string) (*exec.Cmd, error)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println("cmd.StdoutPipe: ", err)
-		return cmd, err
+		return err
 	}
 	cmd.Stderr = os.Stderr
 	cmd.Dir = dir
 	err = cmd.Start()
+	task.Command = cmd
 	if err != nil {
-		return cmd, err
+		return err
 	}
 	reader := bufio.NewReader(stdout)
 	for {
@@ -35,7 +37,7 @@ func Exec(fileName, dir, commandName string, params []string) (*exec.Cmd, error)
 		f.Sync()
 	}
 	err = cmd.Wait()
-	return cmd, err
+	return err
 }
 
 func ReadLog(filePath string, lineNumber int) ([]string, int) {
