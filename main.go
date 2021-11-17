@@ -10,5 +10,5 @@ func main() {
 	fmt.Println("terraform box is starting")
 
 	taskpool.Init()
-	api.Init(":8888")
+	api.Init("8888")
 }
