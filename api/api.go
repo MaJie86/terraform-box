@@ -46,7 +46,7 @@ func cancel(ctx iris.Context) {
 }
 
 func getLog(ctx iris.Context) {
-	lines, total := cmd.ReadLog("d://logs/cmd/test.log", 6)
+	lines, total := cmd.ReadLog(utils.RootCmdLogPath+"test.log", 6)
 	ctx.JSON(total)
 	ctx.JSON(lines)
 }
