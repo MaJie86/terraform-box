@@ -19,6 +19,7 @@ func Init(port string) {
 }
 
 type RequestBody struct {
+	Key     string   `json:"key"`
 	Command string   `json:"command"`
 	Params  []string `json:"params"`
 }
@@ -36,12 +37,14 @@ func apply(ctx iris.Context) {
 			log.Fatal("failed to kill process: ", err)
 		}
 	}
-	taskpool.Run("aaa", task)
+	taskpool.Run(rb.Key, task)
 	ctx.JSON("apply finish")
 }
 
 func cancel(ctx iris.Context) {
-	taskpool.Cancel("aaa")
+	var rb RequestBody
+	ctx.ReadJSON(&rb)
+	taskpool.Cancel(rb.Key)
 	ctx.JSON("cancel finish")
 }
 
