@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/majie86/terraform-box/cmd"
+	"github.com/majie86/terraform-box/file"
 	"github.com/majie86/terraform-box/taskpool"
 	"github.com/majie86/terraform-box/utils"
 	"log"
@@ -27,7 +28,8 @@ func apply(ctx iris.Context) {
 	ctx.ReadJSON(&rb)
 	task := taskpool.Task{}
 	task.Do = func() {
-		cmd.Exec("test.log", utils.RootCmdLogPath, rb.Command, rb.Params, &task)
+		task.Command = cmd.Exec(rb.Command, rb.Params)
+		file.WriteFileByCmd("test.log", utils.RootCmdLogPath, task.Command)
 	}
 	task.Stop = func() {
 		if err := task.Command.Process.Kill(); err != nil {

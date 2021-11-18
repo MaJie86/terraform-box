@@ -2,42 +2,14 @@ package cmd
 
 import (
 	"bufio"
-	"fmt"
-	"github.com/majie86/terraform-box/taskpool"
-	"io"
 	"os"
 	"os/exec"
 )
 
-func Exec(fileName, dir, commandName string, params []string, task *taskpool.Task) error {
-	os.MkdirAll(dir, 755)
-	f, err := os.Create(dir + fileName)
-	defer f.Close()
-	cmd := exec.Command(commandName, params...)
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		fmt.Println("cmd.StdoutPipe: ", err)
-		return err
-	}
+func Exec(command string, params []string) *exec.Cmd {
+	cmd := exec.Command(command, params...)
 	cmd.Stderr = os.Stderr
-	cmd.Dir = dir
-	err = cmd.Start()
-	task.Command = cmd
-	if err != nil {
-		return err
-	}
-	reader := bufio.NewReader(stdout)
-	for {
-		line, err2 := reader.ReadString('\n')
-		if err2 != nil || io.EOF == err2 {
-			break
-		}
-		print(line)
-		_, err = f.WriteString(line)
-		f.Sync()
-	}
-	err = cmd.Wait()
-	return err
+	return cmd
 }
 
 func ReadLog(filePath string, lineNumber int) ([]string, int) {
